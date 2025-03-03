@@ -1,16 +1,22 @@
 # TODO 1: Set the minimum required version of CMake to be 3.10
 cmake_minimum_required(VERSION 3.10)
+message(STATUS "CMake version: ${CMAKE_VERSION}")
 
 # TODO 2: Create a project named Tutorial
 project(Tutorial)
 
 # TODO 7: Set the project version number as 1.0 in the above project command
 project(Tutorial VERSION 1.0)
+set(DEBUG_MODE 0x12345678)
+
+message(STATUS "Tutorial version: ${Tutorial_VERSION}")
 
 # TODO 6: Set the variable CMAKE_CXX_STANDARD to 11
 #         and the variable CMAKE_CXX_STANDARD_REQUIRED to True
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
+message(STATUS "C++ compiler path: ${CMAKE_CXX_COMPILER}")
+message(STATUS "C++ compiler flags: ${CMAKE_CXX_FLAGS}")
 
 # TODO 8: Use configure_file to configure and copy TutorialConfig.h.in to
 #         TutorialConfig.h
@@ -18,10 +24,21 @@ configure_file(TutorialConfig.h.in TutorialConfig.h)
 
 # TODO 3: Add an executable called Tutorial to the project
 # Hint: Be sure to specify the source file as tutorial.cxx
-add_executable(Tutorial_exec tutorial.cxx)
+add_executable(Tutorial_exec 
+                ${CMAKE_CURRENT_SOURCE_DIR}/tutorial.cxx
+                )
 
 # TODO 9: Use target_include_directories to include ${PROJECT_BINARY_DIR}
-target_include_directories(Tutorial_exec PUBLIC
-                           "${PROJECT_BINARY_DIR}"
+target_include_directories(Tutorial_exec
+                           PUBLIC ${PROJECT_BINARY_DIR}
                            )
+
+message(STATUS "System name: ${CMAKE_SYSTEM_NAME}")
+message(STATUS "System version: ${CMAKE_SYSTEM_VERSION}")
+message(STATUS "System processor: ${CMAKE_SYSTEM_PROCESSOR}")
+
+message(STATUS "CMake generator: ${CMAKE_GENERATOR}")
+
+message(STATUS "CMake binary (build) directory: ${CMAKE_BINARY_DIR}")
+message(STATUS "CMake source directory: ${CMAKE_SOURCE_DIR}")
 

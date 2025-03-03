@@ -1,7 +1,16 @@
 // the configured options and settings for Tutorial
 // TODO 10: Define Tutorial_VERSION_MAJOR and Tutorial_VERSION_MINOR
 
-// the configured options and settings for Tutorial
+// The below makes use of the <PROJECT-NAME>_VERSION_MAJOR and <PROJECT-NAME>_VERSION_MINOR CMake variables
+// which are set in the project() command in the CMakeLists.txt file.
+// We set them both at once using project(Tutorial VERSION 1.0) which results in the following:
+// set(Tutorial_VERSION_MAJOR 1)
+// set(Tutorial_VERSION_MINOR 0)
+// The configure_file command replaces all instances of @<VAR>@ with the value of <VAR> in the input file.
+// So for example @Tutorial_VERSION_MAJOR@ is replaced with Tutorial_VERSION_MAJOR which is 1 and so on.
+// The input file is TutorialConfig.h.in and the output file is TutorialConfig.h.
+// The input file is copied to the output file with the replacements made.
 #define Tutorial_VERSION_MAJOR @Tutorial_VERSION_MAJOR@
 #define Tutorial_VERSION_MINOR @Tutorial_VERSION_MINOR@
 
+#define DEUBG_MODE @DEBUG_MODE@
