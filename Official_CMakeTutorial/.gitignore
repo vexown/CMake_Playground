@@ -1,0 +1,44 @@
+# CMake build directories
+**/build/
+**/CMakeFiles/
+*build*/
+
+# CMake generated files
+CMakeCache.txt
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+Makefile
+*.cmake
+!CMakeLists.txt
+!CTestConfig.cmake
+!Config.cmake.in
+
+# Generated files
+*.a
+*.so
+*.dylib
+*.dll
+*.exe
+*.out
+*.app
+*.o
+*.obj
+
+# Generated directories
+bin/
+lib/
+_deps/
+
+# Generated config files
+*Config.h
+!*Config.h.in
+
+# IDE specific files
+.vscode/*
+!.vscode/settings.json
+.idea/
+.vs/
+*.swp
+*.swo
