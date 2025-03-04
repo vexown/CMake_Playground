@@ -1,3 +1,18 @@
+# REMEMBER TO SPECIFY THE INSTALLATION DIRECTORY via -DCMAKE_INSTALL_PREFIX
+# Example: cmake .. -DCMAKE_INSTALL_PREFIX=/home/blankmcu/Repos/CMake_Playground/Official_CMakeTutorial/Step5_install
+#
+# The following commands are used to install the Tutorial project:
+#   - install(TARGETS): Installs the Tutorial executable in the bin directory
+#   - install(FILES): Installs the TutorialConfig.h header file in the include directory
+#
+# Then you need to call:
+#   - cmake .. -DCMAKE_INSTALL_PREFIX=/home/blankmcu/Repos/CMake_Playground/Official_CMakeTutorial/Step5_install
+#   - cmake --build . (or make)
+#   - cmake --install . (or make install)
+#
+# The output of the installation should be in the directory specified with -DCMAKE_INSTALL_PREFIX
+#
+
 cmake_minimum_required(VERSION 3.15)
 
 # set the project name and version
@@ -5,6 +20,27 @@ project(Tutorial VERSION 1.0)
 
 # specify the C++ standard
 add_library(tutorial_compiler_flags INTERFACE)
+
+# target_compile_features vs target_compile_options
+#
+# 1. target_compile_features: Specifies language features needed by your code
+#    - High-level abstraction (what you need)
+#    - Example: target_compile_features(MyTarget PRIVATE cxx_std_11)
+#    - CMake translates this to the appropriate compiler-specific flags
+#    - Portable across different compilers and platforms
+#    - Used for: C++ standards, specific language features (lambdas, constexpr)
+#
+# 2. target_compile_options: Specifies direct compiler flags
+#    - Low-level implementation (how to achieve it)
+#    - Example: target_compile_options(MyTarget PRIVATE -Wall)
+#    - Often requires conditional logic for different compilers
+#    - Used for: Warning levels, optimization flags, preprocessor definitions
+#
+# Best Practice:
+# - Use target_compile_features for language standard requirements
+# - Use target_compile_options for compiler-specific behavior
+# - When both could work (like setting C++ standard), prefer target_compile_features
+#   for better portability
 target_compile_features(tutorial_compiler_flags INTERFACE cxx_std_11)
 
 # add compiler warning flags just when building this project via
@@ -39,6 +75,8 @@ target_include_directories(Tutorial PUBLIC
                            "${PROJECT_BINARY_DIR}"
                            )
 
+################################################### INSTALLING #############################################
+
 # TODO 3: Install Tutorial in the bin directory
 # Hint: Use the TARGETS and DESTINATION parameters
 install(TARGETS Tutorial DESTINATION bin)
@@ -49,11 +87,13 @@ install(FILES "${PROJECT_BINARY_DIR}/TutorialConfig.h"
         DESTINATION include
         )
 
+################################################### TESTING #############################################
+
 # TODO 5: Enable testing
 enable_testing()
 
 # TODO 6: Add a test called Runs which runs the following command:
-# $ Tutorial 25
+# $ Tutorial 25 (it runs our executable that we have built with the argument 25)
 add_test(NAME Runs COMMAND Tutorial 25)
 
 # TODO 7: Add a test called Usage which runs the following command:
@@ -65,14 +105,33 @@ set_tests_properties(Usage
   PROPERTIES PASS_REGULAR_EXPRESSION "Usage:.*number"
   )
 
-# TODO 8: Add a test which runs the following command:
-# $ Tutorial 4
-# Make sure the result is correct.
-# Hint: Use the PASS_REGULAR_EXPRESSION property with "4 is 2"
-add_test(NAME StandardUse COMMAND Tutorial 4)
+# CMake Testing and Output Verification
+#
+# 1. add_test(NAME StandardUse COMMAND Tutorial 4)
+#    - Creates a test named "StandardUse"
+#    - Executes the command "Tutorial 4" (our executable with argument 4)
+#
+# 2. set_tests_properties with PASS_REGULAR_EXPRESSION:
+#    - Defines success criteria for the test
+#    - The test PASSES only if the program output contains the specified string
+#    - Uses regular expression matching on the program's stdout
+#    - If the pattern is not found, the test FAILS
+#
+# In this case:
+# - We run "Tutorial 4" 
+# - We expect it to calculate the square root of 4
+# - The test passes if "4 is 2" appears in the output
+# - This verifies both program execution and correctness of calculation
+#
+# This approach allows automated verification that:
+# - The program runs without crashing
+# - The program produces expected output for given inputs
+# - Mathematical operations produce correct results
+add_test(NAME StandardUse 
+        COMMAND Tutorial 4)
+
 set_tests_properties(StandardUse
-  PROPERTIES PASS_REGULAR_EXPRESSION "4 is 2"
-  )
+                        PROPERTIES PASS_REGULAR_EXPRESSION "4 is 2")
 
 # TODO 9: Add more tests. Create a function called do_test to avoid copy +
 # paste. Test the following values: 4, 9, 5, 7, 25, -25 and 0.00001.
