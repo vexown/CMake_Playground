@@ -94,6 +94,7 @@ do_test(Tutorial 0.0001 "0.0001 is 0.01")
 # 4. CPACK_SOURCE_GENERATOR
 #    - Specifies format for source code distribution
 #    - "TGZ" creates .tar.gz compressed archives
+#    - "DEB" creates source packages for Debian packages
 #
 # 5. include(CPack)
 #    - Processes the CPack configuration
@@ -101,9 +102,18 @@ do_test(Tutorial 0.0001 "0.0001 is 0.01")
 #
 # After configuration, you can create packages with:
 #    cmake --build . --target package
+
+# CPack Packaging Configuration - Ubuntu/Debian
 include(InstallRequiredSystemLibraries)
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/License.txt")
 set(CPACK_PACKAGE_VERSION_MAJOR "${Tutorial_VERSION_MAJOR}")
 set(CPACK_PACKAGE_VERSION_MINOR "${Tutorial_VERSION_MINOR}")
-set(CPACK_SOURCE_GENERATOR "TGZ")
+
+# Ubuntu/Debian specific settings
+set(CPACK_GENERATOR "DEB")  # Generate .deb packages
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Your Name <your.email@example.com>")  # Required for DEB
+set(CPACK_DEBIAN_PACKAGE_SECTION "devel")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6 (>= 2.3.1-6)")  # Common dependency
+set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "Tutorial application that computes the square root of a number")
+
 include(CPack)
