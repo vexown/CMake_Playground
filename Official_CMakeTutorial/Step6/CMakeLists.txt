@@ -3,6 +3,11 @@ cmake_minimum_required(VERSION 3.15)
 # set the project name and version
 project(Tutorial VERSION 1.0)
 
+# The ctest executable will build the project, run any tests, 
+# and submit the results to Kitware's public dashboard: https://my.cdash.org/index.php?project=CMakeTutorial.
+# This will enable testing with CTest as well as dashboard submissions to CDash, so we can safely remove the call to enable_testing().
+include(CTest)
+
 # specify the C++ standard
 add_library(tutorial_compiler_flags INTERFACE)
 target_compile_features(tutorial_compiler_flags INTERFACE cxx_std_11)
@@ -44,9 +49,6 @@ install(TARGETS Tutorial DESTINATION bin)
 install(FILES "${PROJECT_BINARY_DIR}/TutorialConfig.h"
   DESTINATION include
   )
-
-# enable testing
-enable_testing()
 
 # does the application run
 add_test(NAME Runs COMMAND Tutorial 25)
