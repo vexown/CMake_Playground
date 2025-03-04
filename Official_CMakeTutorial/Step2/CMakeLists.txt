@@ -49,3 +49,31 @@ target_include_directories(Tutorial PUBLIC
                             ${OPTIONAL_INCLUDES}
                             )
 
+# Lists in CMake - Quick Reference
+#
+# 1. Lists are created in two ways:
+#    a. Space-separated items: set(my_list item1 item2 item3)
+#    b. Semicolon-separated string: set(my_list "item1;item2;item3")
+#
+# 2. When displayed with message(), lists appear as semicolon-separated:
+#    - set(var a b c d e) → "${var}" prints as "a;b;c;d;e"
+#
+# 3. Common list operations:
+#    - list(LENGTH list_var output_var)      # Get number of elements
+#    - list(GET list_var 0 output_var)       # Get first element (zero-indexed)
+#    - list(APPEND list_var new_item)        # Add items to end
+#    - list(INSERT list_var 2 new_item)      # Insert at position
+#    - list(REMOVE_ITEM list_var item)       # Remove by value
+#    - list(REMOVE_AT list_var 2)            # Remove by position
+#    - list(JOIN list_var ", " output_var)   # Join with separator
+#
+# 4. Important distinction:
+#    - set(var a b c d e)    # Creates a list with 5 separate items
+#    - set(var2 "a b c d e") # Creates a single string with spaces
+#
+# Example below demonstrates the difference between a list and a quoted string:
+set(var a b c d e)
+message("var: ${var}")
+
+set(var2 "a b c d e")
+message("var2: ${var2}")
