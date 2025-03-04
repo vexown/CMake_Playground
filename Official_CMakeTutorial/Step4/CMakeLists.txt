@@ -5,6 +5,8 @@ cmake_minimum_required(VERSION 3.15)
 # set the project name and version
 project(Tutorial VERSION 1.0)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # TODO 1: Replace the following code by:
 # * Creating an interface library called tutorial_compiler_flags
 #   Hint: use add_library() with the INTERFACE signature
@@ -35,6 +37,42 @@ set(msvc_cxx "$<COMPILE_LANG_AND_ID:CXX,MSVC>")
 # TODO 7: With nested generator expressions, only use the flags for the
 # build-tree
 # Hint: Use BUILD_INTERFACE
+
+# Generator Expressions in CMake - Explanation
+#
+# Generator expressions like "$<${gcc_like_cxx}:...>" are evaluated during build system 
+# generation, not during CMake configuration. This is an important distinction:
+#
+# - CMake Configuration Phase (cmake ..): Variables are set, conditions evaluated
+#   During this phase, you can check ${CMAKE_CXX_COMPILER_ID} to predict which path will be taken
+#   but the generator expressions themselves won't be evaluated yet.
+#
+# - Build System Generation Phase: Generator expressions are translated into build rules
+#   This happens at the end of CMake configuration and during build file generation.
+#
+# - Build Phase (make/ninja): The previously evaluated expressions are used
+#
+# How to check which generator expressions evaluated to true:
+#
+# 1. Use verbose build output:
+#    make VERBOSE=1  
+#    (or) cmake --build . -v
+#    
+#    Look for compiler flags in the output. In our case:
+#    - If you see -Wall -Wextra -Wshadow -Wformat=2 -Wunused -> gcc_like_cxx is TRUE
+#    - If you see -W3 -> msvc_cxx is TRUE
+#
+# 2. Create a file with expanded expressions:
+#    file(GENERATE OUTPUT "${CMAKE_BINARY_DIR}/expanded_flags.txt"
+#         CONTENT "Compiler flags: $<$<BOOL:${gcc_like_cxx}>:GCC-like compiler detected>\n
+#                  $<$<BOOL:${msvc_cxx}>:MSVC compiler detected>\n")
+#
+# 3. Export compile commands (useful for tooling):
+#    set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+#    Then examine compile_commands.json in the build directory
+#
+# Note: The BUILD_INTERFACE specifier ensures these flags are only used when building
+# directly from this project, not when the project is used from an install location.
 target_compile_options(tutorial_compiler_flags INTERFACE
   "$<${gcc_like_cxx}:$<BUILD_INTERFACE:-Wall;-Wextra;-Wshadow;-Wformat=2;-Wunused>>"
   "$<${msvc_cxx}:$<BUILD_INTERFACE:-W3>>")
