@@ -74,6 +74,33 @@ do_test(Tutorial 25 "25 is 5")
 do_test(Tutorial -25 "-25 is (-nan|nan|0)")
 do_test(Tutorial 0.0001 "0.0001 is 0.01")
 
+# CPack Packaging Configuration
+#
+# This section configures CPack, which is CMake's packaging tool that creates
+# installers and distribution archives for your project.
+#
+# 1. InstallRequiredSystemLibraries
+#    - Includes runtime libraries (like Visual C++ DLLs on Windows)
+#    - Ensures your application works on systems without development tools
+#
+# 2. CPACK_RESOURCE_FILE_LICENSE
+#    - Specifies the license file to include with the package
+#    - Will be displayed during installation on some platforms
+#
+# 3. Version settings
+#    - Uses the version components from our project
+#    - These appear in package filenames and metadata
+#
+# 4. CPACK_SOURCE_GENERATOR
+#    - Specifies format for source code distribution
+#    - "TGZ" creates .tar.gz compressed archives
+#
+# 5. include(CPack)
+#    - Processes the CPack configuration
+#    - Creates packaging targets like "package" and "package_source"
+#
+# After configuration, you can create packages with:
+#    cmake --build . --target package
 include(InstallRequiredSystemLibraries)
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/License.txt")
 set(CPACK_PACKAGE_VERSION_MAJOR "${Tutorial_VERSION_MAJOR}")
